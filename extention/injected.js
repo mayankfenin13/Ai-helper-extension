@@ -14,11 +14,6 @@
       const apiPattern = /^https:\/\/api2\.maang\.in\/problems\/user\/.*$/;
 
       if (apiPattern.test(this._url)) {
-        console.log("Intercepted API Call:");
-        console.log("URL:", this._url);
-        console.log("Method:", this._method);
-        console.log("Response:", this.responseText);
-
         // Post message to the content script
         window.postMessage(
           {

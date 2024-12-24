@@ -2,16 +2,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "apiIntercepted") {
     console.log("Message received from content script:", message);
 
+    let parsedResponse;
+    try {
+      // Parse the stringified JSON
+      parsedResponse = JSON.parse(message.response);
+    } catch (error) {
+      console.error("Failed to parse JSON response:", error);
+      sendResponse({
+        status: "error",
+        error: "Invalid JSON format in response",
+      });
+      return;
+    }
+
+    // Extract DSA problem details
+    const extractedDetails = extractDSAProblemDetails(parsedResponse);
+
     // Store the intercepted context in the background script
     chrome.storage.local.set({
       interceptedContext: {
         url: message.url,
         method: message.method,
-        response: message.response,
+        extractedDetails, // Store the structured context
       },
     });
 
-    sendResponse({ status: "contextStored" }); // Acknowledge that the context is stored
+    sendResponse({ status: "contextStored", message: extractedDetails }); // Acknowledge that the context is stored
     return true; // Keep the sendResponse channel open for async operations
   }
 
@@ -25,7 +41,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
 
-      queryExternalAI(message.query, context)
+      queryExternalAI(message.query, context.extractedDetails)
         .then((aiResponse) => {
           console.log("AI Server Response:", aiResponse);
           sendResponse({ status: "success", aiResponse });
@@ -56,4 +72,26 @@ async function queryExternalAI(query, context) {
   }
 
   return response.json();
+}
+
+// Extraction function
+function extractDSAProblemDetails(data) {
+  return {
+    title: data.data.title,
+    description: data.data.body,
+    constraints: data.data.constraints,
+    inputFormat: data.data.input_format,
+    outputFormat: data.data.output_format,
+    hints: data.data.hints,
+    samples: data.data.samples.map((sample) => ({
+      input: sample.input,
+      output: sample.output,
+    })),
+    languagesSupported: data.data.languages,
+    editorialCode: data.data.editorial_code.map((code) => ({
+      language: code.language,
+      code: code.code,
+    })),
+    solutionApproach: data.data.hints.solution_approach,
+  };
 }
