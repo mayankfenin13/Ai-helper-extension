@@ -98,7 +98,7 @@ export class ChatBox {
           const aiMessage = {
             id: Date.now(),
             type: "system",
-            content: response.aiResponse.response,
+            content: response.aiResponse.response, // This is HTML content
             timestamp: new Date(),
           };
           this.messages.push(aiMessage);
@@ -126,7 +126,13 @@ export class ChatBox {
 
       const contentElement = document.createElement("div");
       contentElement.className = "message-content";
-      contentElement.textContent = message.content;
+
+      // Use innerHTML for system messages to render HTML
+      if (message.type === "system") {
+        contentElement.innerHTML = message.content;
+      } else {
+        contentElement.textContent = message.content; // User input remains text-only
+      }
 
       const timeElement = document.createElement("div");
       timeElement.className = "message-time";

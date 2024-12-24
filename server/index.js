@@ -1,4 +1,6 @@
 const express = require("express");
+const { marked } = require("marked");
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require("cors");
 const app = express();
@@ -23,7 +25,11 @@ app.post("/query", async (req, res) => {
   try {
     const prompt = `${query}\n\nContext:\n${JSON.stringify(context, null, 2)}`;
     const result = await model.generateContent(prompt);
-    res.json({ response: result.response.text() });
+
+    const markdown_response = result.response.text();
+    const html_response = marked(markdown_response);
+
+    res.json({ response: html_response });
   } catch (error) {
     console.error("Error querying Gemini AI:", error);
     res.status(500).send("Internal Server Error");
