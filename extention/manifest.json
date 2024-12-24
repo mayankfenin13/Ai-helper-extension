@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini AI Query Logger",
+  "version": "1.0",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": ["*://*.maang.in/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+  {
+    "matches": ["*://*.maang.in/*"],
+    "js": ["dist/content.bundle.js"],
+    "css": ["ui/style.css"]
+  }
+],
+  "web_accessible_resources": [
+    {
+      "resources": ["injected.js"],
+      "matches": ["*://*.maang.in/*"]
+    }
+  ]
+}
