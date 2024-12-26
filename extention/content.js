@@ -94,25 +94,6 @@ const addChatButtonAsListItem = () => {
     white-space: nowrap;
   `;
 
-  // Create the AI icon using SVG for better quality
-  const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  iconSvg.setAttribute("viewBox", "0 0 24 24");
-  iconSvg.setAttribute("width", "20");
-  iconSvg.setAttribute("height", "20");
-  iconSvg.style.marginRight = "8px";
-
-  const iconPath = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "path"
-  );
-  iconPath.setAttribute(
-    "d",
-    "M20.5278 9.87866L15.5363 9.42148L13.4886 4.77192C13.3786 4.54192 13.1919 4.35481 12.9619 4.24481C12.4519 4.00315 11.8466 4.19026 11.6033 4.70026L9.55561 9.42148L4.56561 9.87866C4.31561 9.90399 4.08861 10.0197 3.92195 10.2024C3.72128 10.4257 3.63195 10.7197 3.67795 11.0117C3.72395 11.3037 3.89561 11.5604 4.14828 11.7197L8.02395 14.7764L6.85695 19.6764C6.79254 19.9132 6.82132 20.164 6.93695 20.3807C7.05261 20.5974 7.24695 20.7641 7.48195 20.8484C7.71695 20.9327 7.97495 20.9284 8.20728 20.8361L12.5453 18.4797L16.8833 20.8361C17.0786 20.9124 17.2926 20.9284 17.5 20.8787C18.0213 20.7557 18.3573 20.2364 18.2346 19.7151L17.0673 14.7764L20.9433 11.7197C21.1259 11.5531 21.2419 11.3261 21.2673 11.0764C21.3786 10.5491 21.0053 10.0484 20.5278 9.87866Z"
-  );
-  iconPath.setAttribute("fill", "#fff");
-  iconPath.setAttribute("stroke", "rgba(255, 255, 255, 0.5)");
-  iconPath.setAttribute("stroke-width", "1.5");
-
   // Add the shortcut text
   const shortcutSpan = document.createElement("span");
   shortcutSpan.textContent = "(⌘K/ctrl+K)";
@@ -165,8 +146,7 @@ const addChatButtonAsListItem = () => {
   });
 
   // Assemble all elements
-  iconSvg.appendChild(iconPath);
-  button.prepend(iconSvg);
+
   button.appendChild(shortcutSpan);
   buttonContainer.appendChild(button);
   liElement.appendChild(buttonContainer);
