@@ -1,7 +1,8 @@
-import { ChatBox } from "./ui/ChatBox";
-import "./ui/style.css";
-
 // Listener to handle messages from injected.js
+import { ChatBox } from "./ui/ChatBox";
+
+const chatBox = new ChatBox();
+
 window.addEventListener("message", (event) => {
   if (
     event.source !== window ||
@@ -32,9 +33,6 @@ script.onload = function () {
 };
 (document.head || document.documentElement).appendChild(script);
 
-// Function to create and display the chatbot modal
-
-const chatBox = new ChatBox();
 // Function to add the new UI button
 const addChatButton = () => {
   const button = document.createElement("button");
@@ -52,7 +50,11 @@ const addChatButton = () => {
   button.style.cursor = "pointer";
   button.style.zIndex = "1000";
 
-  button.addEventListener("click", () => chatBox.show());
+  // Ensure button calls the `show` method of the `chatBox` instance
+  button.addEventListener("click", () => {
+    console.log("Button clicked, opening chatbox");
+    chatBox.show();
+  });
 
   document.body.appendChild(button);
 };

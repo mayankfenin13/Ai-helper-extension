@@ -47,6 +47,10 @@ app.get("/", (req, res) => {
 app.post("/query", async (req, res) => {
   const { query, context, db_data } = req.body;
 
+  console.log("Received query:", query);
+  console.log("Context:", context);
+  console.log("DB Data:", db_data);
+
   if (!query || !db_data || !db_data.user_name || !db_data.problem_title) {
     return res.status(400).json({
       status: "failed",
@@ -59,7 +63,6 @@ app.post("/query", async (req, res) => {
   const problem_title_from_db = db_data.problem_title;
 
   try {
-    // Check or create user
     let user = await User.findOne({ username: user_name_from_db });
     if (!user) {
       user = await new User({
@@ -68,14 +71,12 @@ app.post("/query", async (req, res) => {
       }).save();
     }
 
-    // Check for an existing conversation with the same owner and problem title
     let conversation = await Conversation.findOne({
       owner: user._id,
       title: problem_title_from_db,
     });
 
     if (!conversation) {
-      // Create a new conversation if it doesn't exist
       conversation = await new Conversation({
         title: problem_title_from_db,
         owner: user._id,
@@ -85,36 +86,77 @@ app.post("/query", async (req, res) => {
       await user.save();
     }
 
-    // Create a chat history for the AI model based on conversation messages
     const history = conversation.messages.map((msg) => ({
       role: msg.role,
       parts: [{ text: msg.parts }],
     }));
 
-    // Combine history and context
     const chat = model.startChat({ history });
     const prompt = `${query}\n\nContext:\n${JSON.stringify(context, null, 2)}`;
-
-    // Send the query along with the context to the AI model
     const result = await chat.sendMessage(prompt);
-
-    // Extract the AI's response
     const aiResponse = result.response.text();
 
-    // Append new messages to the existing conversation
+    const marked_response = marked(aiResponse);
+
     conversation.messages.push(
       { role: "user", parts: query },
-      { role: "model", parts: aiResponse }
+      { role: "model", parts: marked_response }
     );
     await conversation.save();
 
     res.status(200).json({
       status: "success",
-      response: marked(aiResponse), // Convert AI response to HTML if needed
+      response: marked_response,
       conversationId: conversation._id,
     });
   } catch (error) {
     console.error("Error querying Gemini AI or database operations:", error);
+    res.status(500).json({
+      status: "failed",
+      error: error.message,
+    });
+  }
+});
+
+// New /history endpoint
+app.get("/history", async (req, res) => {
+  const { user_name, problem_title } = req.query;
+
+  if (!user_name || !problem_title) {
+    return res.status(400).json({
+      status: "failed",
+      error: "Missing user_name or problem_title in query parameters.",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ username: user_name });
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        error: "User not found.",
+      });
+    }
+
+    const conversation = await Conversation.findOne({
+      owner: user._id,
+      title: problem_title,
+    });
+
+    if (!conversation) {
+      // Return an empty conversation if none exists for this problem
+      return res.status(200).json({
+        status: "success",
+        conversation: [],
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      conversation: conversation.messages,
+    });
+  } catch (error) {
+    console.error("Error retrieving conversation history:", error);
     res.status(500).json({
       status: "failed",
       error: error.message,
