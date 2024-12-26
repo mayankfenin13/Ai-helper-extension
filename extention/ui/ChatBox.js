@@ -53,6 +53,23 @@ export class ChatBox {
     this.chatbox = document.createElement("div");
     this.chatbox.className = "chat-box";
 
+    // Updated header with welcome message and close button
+    const header = document.createElement("div");
+    header.className = "chat-header";
+
+    const welcomeMessage = document.createElement("div");
+    welcomeMessage.className = "welcome-message";
+    welcomeMessage.textContent = "Hey, how can I help you?";
+
+    const closeButton = document.createElement("button");
+    closeButton.className = "close-button";
+    closeButton.textContent = "×";
+    closeButton.addEventListener("click", () => this.hide());
+
+    header.appendChild(welcomeMessage);
+    header.appendChild(closeButton);
+    this.chatbox.appendChild(header);
+
     // Messages container
     this.messagesContainer = document.createElement("div");
     this.messagesContainer.className = "messages";
@@ -76,8 +93,6 @@ export class ChatBox {
     this.chatbox.appendChild(this.messagesContainer);
     this.chatbox.appendChild(inputContainer);
     document.body.appendChild(this.chatbox);
-
-    this.renderMessages();
   }
 
   handleKeydown(e) {

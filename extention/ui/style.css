@@ -16,24 +16,25 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 680px;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90%;
+  max-width: 640px;
   height: 85vh;
   max-height: 750px;
   background: linear-gradient(
-    140deg,
+    145deg,
     var(--gradient-start),
     var(--gradient-end)
   );
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 16px 64px rgba(0, 0, 0, 0.3),
-    inset 0 1px 2px rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(25px) saturate(1.5);
-  -webkit-backdrop-filter: blur(25px) saturate(1.5);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 16px 64px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -45,6 +46,46 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--border);
+}
+
+.welcome-message {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  transform: scale(1.05);
+}
+
+.close-button:active {
+  transform: scale(0.95);
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -54,7 +95,7 @@
   background: var(--background);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.4s ease;
+  transition: opacity 0.2s ease;
   pointer-events: none;
   z-index: 999;
 }
@@ -68,23 +109,20 @@
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  padding: 20px;
 }
 
 .message {
-  margin-bottom: 12px;
-  padding: 14px 18px;
-  border-radius: 16px;
-  max-width: 75%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 80%;
 }
 
 .message.system {
   background: var(--system-message);
   margin-right: auto;
+  border: 1px solid var(--border);
   color: var(--text-secondary);
 }
 
@@ -96,8 +134,7 @@
 
 .message-content {
   margin-bottom: 4px;
-  font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 .message-time {
@@ -108,51 +145,69 @@
 
 .input-container {
   padding: 16px;
+  border-top: 1px solid var(--border);
   display: flex;
   gap: 12px;
-  align-items: center;
   background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid var(--border);
 }
 
 .message-input {
   flex: 1;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   color: var(--text);
-  font-size: 16px;
-  padding: 14px;
+  font-size: 14px;
+  padding: 12px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .message-input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 8px var(--primary);
 }
 
 .send-button {
   background: var(--primary);
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   color: white;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
+  width: 40px;
+  font-size: 18px;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 .send-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(78, 168, 255, 0.6);
+  transform: scale(1.05);
 }
 
 .send-button:active {
   transform: scale(0.95);
-  box-shadow: 0 2px 6px rgba(78, 168, 255, 0.4);
+}
+
+@media (max-width: 480px) {
+  .chat-box {
+    width: 100%;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .messages {
+    padding: 16px;
+  }
+
+  .input-container {
+    padding: 12px;
+  }
+
+  .message {
+    max-width: 85%;
+  }
+
+  .close-button {
+    top: 12px;
+    right: 12px;
+  }
 }
