@@ -175,7 +175,7 @@ export class ChatBox {
     }
 
     fetch(
-      `http://localhost:3000/history?user_name=${userName}&problem_title=${problemTitle}`
+      `https://ai-helper-extention.vercel.app/history?user_name=${userName}&problem_title=${problemTitle}`
     )
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch chat history");
@@ -266,7 +266,7 @@ export class ChatBox {
         },
       };
 
-      fetch("http://localhost:3000/query", {
+      fetch("https://ai-helper-extention.vercel.app/query", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
