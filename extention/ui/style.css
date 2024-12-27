@@ -1,15 +1,33 @@
+/* Default theme (light mode) */
 :root {
-  --background: rgba(12, 12, 24, 0.85);
-  --surface: rgba(20, 20, 30, 0.9);
-  --surface-hover: rgba(30, 30, 50, 0.95);
-  --text: #e0e0ff;
-  --text-secondary: #a0a0c0;
-  --primary: #4ea8ff;
-  --border: rgba(200, 200, 255, 0.2);
-  --user-message: rgba(78, 168, 255, 0.1);
-  --system-message: rgba(255, 255, 255, 0.15);
-  --gradient-start: rgba(30, 30, 60, 0.85);
-  --gradient-end: rgba(20, 20, 40, 0.75);
+  --background: rgba(224, 240, 255, 0.613); /* Ethereal light blue background */
+  --surface: rgba(255, 255, 255, 0.9); /* Translucent white surface */
+  --surface-hover: rgba(230, 247, 255, 0.95); /* Soft blue hover state */
+  --text: #1e2e3d; /* Deep blue-gray text */
+  --text-secondary: #5a7184; /* Muted blue-gray */
+  --primary: #0084ff; /* Vibrant AI blue */
+  --primary-glow: rgba(0, 132, 255, 0.15); /* Glow effect color */
+  --border: rgba(148, 190, 255, 0.2); /* Subtle blue-tinted border */
+  --user-message: rgba(0, 132, 255, 0.08); /* Light blue for user messages */
+  --system-message: rgba(236, 242, 254, 0.9); /* Subtle blue tint for system */
+  --gradient-start: rgba(236, 242, 254, 0.8);
+  --gradient-end: rgba(250, 253, 255, 0.9);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --background: rgba(13, 17, 23, 0.844); /* Deep space background */
+  --surface: rgba(22, 27, 34, 0.9); /* Dark surface with slight transparency */
+  --surface-hover: rgba(30, 37, 48, 0.95); /* Lighter hover state */
+  --text: #e1e8ff; /* Soft blue-white text */
+  --text-secondary: #8b9fbd; /* Muted blue-gray */
+  --primary: #4ea8ff; /* Bright blue accent */
+  --primary-glow: rgba(78, 168, 255, 0.2); /* Glow effect color */
+  --border: rgba(99, 130, 188, 0.15); /* Subtle blue border */
+  --user-message: rgba(78, 168, 255, 0.1); /* Dark blue for user messages */
+  --system-message: rgba(30, 37, 48, 0.95); /* Darker system messages */
+  --gradient-start: rgba(22, 27, 34, 0.9);
+  --gradient-end: rgba(13, 17, 23, 0.95);
 }
 
 .chat-box {
@@ -51,7 +69,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
@@ -144,38 +162,44 @@
 }
 
 .input-container {
-  padding: 16px;
+  padding: 20px 24px;
   border-top: 1px solid var(--border);
   display: flex;
-  gap: 12px;
-  background: rgba(0, 0, 0, 0.2);
+  gap: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .message-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--background);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   color: var(--text);
   font-size: 14px;
-  padding: 12px;
+  padding: 14px 18px;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .message-input:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
 .send-button {
   background: var(--primary);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   color: white;
-  width: 40px;
+  width: 46px;
+  height: 46px;
   font-size: 18px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px var(--primary-glow);
 }
 
 .send-button:hover {
