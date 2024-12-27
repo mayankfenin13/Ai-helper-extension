@@ -25,6 +25,29 @@ window.addEventListener("message", (event) => {
   );
 });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "getUserCode") {
+    const { id } = message;
+
+    // Regex to find the relevant key
+    const regex = new RegExp(`course_\\d+_${id}_\\w+`);
+    let userCode = null;
+
+    // Traverse localStorage to find matching key
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (regex.test(key)) {
+        userCode = localStorage.getItem(key);
+        break; // Stop after finding the first match
+      }
+    }
+
+    // Respond with the user code or null if not found
+    sendResponse({ userCode });
+  }
+  return true; // Keep the message channel open for async response
+});
+
 // Injecting the script into the webpage
 const script = document.createElement("script");
 script.src = chrome.runtime.getURL("injected.js");

@@ -11,33 +11,55 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return;
     }
 
-    const extractedDetails = {
-      problemTitle: parsedResponse.data?.title,
-      context: extractDSAProblemDetails(parsedResponse),
-    };
+    const id = parsedResponse.data?.id;
 
-    chrome.storage.local.set({
-      interceptedContext: extractedDetails,
+    // Request the content script to fetch user code
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length === 0) return;
+
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { type: "getUserCode", id },
+        (response) => {
+          const userCode = response?.userCode || null;
+
+          // Extract problem details, including user code
+          const extractedDetails = {
+            problemTitle: parsedResponse.data?.title,
+            context: {
+              ...extractDSAProblemDetails(parsedResponse),
+              code_written_by_use: userCode,
+            },
+          };
+
+          // Store in Chrome storage
+          chrome.storage.local.set({
+            interceptedContext: extractedDetails,
+          });
+
+          sendResponse({ status: "contextStored", message: extractedDetails });
+        }
+      );
     });
 
-    sendResponse({ status: "contextStored", message: extractedDetails });
-    return true;
+    return true; // Keep the message channel open for async response
   }
 });
 
-// Helper function to extract context
+// Helper function to extract problem details
 function extractDSAProblemDetails(data) {
   return {
-    title: data.data?.title,
-    description: data.data?.body,
-    constraints: data.data?.constraints,
-    inputFormat: data.data?.input_format,
-    outputFormat: data.data?.output_format,
-    hints: data.data?.hints,
+    title: data.data?.title || "No Problem Title",
+    description: data.data?.body || "No Problem Description",
+    constraints: data.data?.constraints || "No Constraints",
+    inputFormat: data.data?.input_format || "No Input Format",
+    outputFormat: data.data?.output_format || "No Output Format",
+    hints: data.data?.hints || [],
+    solution: data.data?.editorial_code || "No Editorial Code",
     samples: data.data?.samples.map((sample) => ({
-      input: sample.input,
-      output: sample.output,
+      input: sample.input || "No Sample Input",
+      output: sample.output || "No Sample Output",
     })),
-    languagesSupported: data.data?.languages,
+    languagesSupported: data.data?.languages || [],
   };
 }
