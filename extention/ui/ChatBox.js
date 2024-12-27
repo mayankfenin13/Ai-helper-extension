@@ -136,16 +136,7 @@ export class ChatBox {
   }
 
   addInitialMessage() {
-    if (this.messages.length === 0) {
-      const initialMessage = {
-        id: Date.now(),
-        type: "system",
-        content: "Hello! How can I help you today?",
-        timestamp: new Date(),
-      };
-      this.messages.push(initialMessage);
-      this.renderMessages();
-    }
+    console.log("ChatBox initialized.");
   }
 
   setLoading(isLoading) {
