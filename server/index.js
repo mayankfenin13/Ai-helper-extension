@@ -130,14 +130,15 @@ app.get("/history", async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ username: user_name });
+    // Check if the user exists
+    let user = await User.findOne({ username: user_name });
     if (!user) {
-      return res.status(404).json({
-        status: "failed",
-        error: "User not found.",
-      });
+      // Create a new user if not found
+      user = new User({ username: user_name });
+      await user.save();
     }
 
+    // Find the conversation associated with the user and problem_title
     const conversation = await Conversation.findOne({
       owner: user._id,
       title: problem_title,
@@ -156,7 +157,7 @@ app.get("/history", async (req, res) => {
       conversation: conversation.messages,
     });
   } catch (error) {
-    console.error("Error retrieving conversation history:", error);
+    console.error("Error retrieving or creating user/conversation:", error);
     res.status(500).json({
       status: "failed",
       error: error.message,
