@@ -2,7 +2,7 @@
 
 ## DEMO VIDEO LINK
 
-[text](https://youtu.be/D5OpcMHzU-w)
+[Link](https://youtu.be/D5OpcMHzU-w)
 
 ## Description
 
