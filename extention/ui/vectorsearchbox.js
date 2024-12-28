@@ -62,7 +62,7 @@ export class VectorSearchBox {
       return;
     }
 
-    fetch("http://localhost:8080/queryById", {
+    fetch("https://ai-helper-extention-searchserver.vercel.app/queryById", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -206,7 +206,7 @@ export class VectorSearchBox {
   performSearch(query) {
     console.log("Performing search for:", query);
 
-    fetch("http://localhost:8080/query", {
+    fetch("https://ai-helper-extention-searchserver.vercel.app/query", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
