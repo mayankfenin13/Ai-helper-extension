@@ -2,6 +2,30 @@ import { ChatBox } from "./ChatBox";
 import "./style.css";
 import { initializeChatBox } from "./ChatBox";
 
+import { VectorSearchBox } from "./vectorsearchbox";
+
+const vectorSearchBox = new VectorSearchBox();
+
+// Add a button to trigger the Vector Search modal
+const vectorButton = document.createElement("button");
+vectorButton.textContent = "Vector Search (⌘D)";
+vectorButton.style.position = "fixed";
+vectorButton.style.bottom = "80px";
+vectorButton.style.left = "50%";
+vectorButton.style.transform = "translateX(-50%)";
+vectorButton.addEventListener("click", () => {
+  vectorSearchBox.show();
+});
+document.body.appendChild(vectorButton);
+
+// Optional: Add keyboard shortcut for toggling Vector Search
+document.addEventListener("keydown", (e) => {
+  if (e.key === "d" && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+    vectorSearchBox.toggle();
+  }
+});
+
 initializeChatBox();
 
 if (document.readyState === "loading") {

@@ -210,6 +210,423 @@
   transform: scale(0.95);
 }
 
+/* Shared overlay styles */
+.vector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--background);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.vector-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+.vector-messages {
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Vector Search Modal */
+.vector-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90%;
+  max-width: 640px;
+  height: 85vh;
+  max-height: 750px;
+  background: linear-gradient(
+    145deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 16px 64px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.vector-modal.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Vector Search Header */
+.vector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.vector-title {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Close Button (shared with ChatBox) */
+.vector-header .close-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vector-header .close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  transform: scale(1.05);
+}
+
+.vector-header .close-button:active {
+  transform: scale(0.95);
+}
+
+/* Vector Search Input Container */
+.vector-input-container {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.vector-input {
+  flex: 1;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 14px 18px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.vector-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.vector-search-button {
+  background: var(--primary);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  width: 46px;
+  height: 46px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.vector-search-button:hover {
+  transform: scale(1.05);
+}
+
+.vector-search-button:active {
+  transform: scale(0.95);
+}
+
+/* Results Container */
+.vector-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.vector-result {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.result-title {
+  font-weight: 500;
+}
+
+.result-score {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Reset background colors and borders */
+.vector-modal {
+  background: rgba(22, 27, 34, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 70px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  max-height: 400px;
+  height: auto;
+}
+
+/* Adjust header to match cmdK */
+.vector-header {
+  background: transparent;
+  border-bottom: none;
+  padding: 8px;
+}
+
+.vector-title {
+  display: none;
+}
+
+/* Style the search input to match cmdK */
+.vector-input-container {
+  border-top: none;
+  background: transparent;
+  padding: 8px;
+}
+
+.vector-input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.vector-input:focus {
+  box-shadow: none;
+  border: none;
+}
+
+.vector-search-button {
+  display: none;
+}
+
+/* Style messages container to match suggestions */
+.vector-messages {
+  padding: 8px;
+}
+
+.message {
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.message:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.message.system {
+  background: transparent;
+  border: none;
+  color: #fff;
+  margin: 0;
+}
+
+.message.user {
+  background: transparent;
+  margin: 0;
+  color: #fff;
+}
+
+.message-content {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Main modal styling to match chatbox */
+.vector-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90%;
+  max-width: 640px;
+  height: 85vh;
+  max-height: 750px;
+  background: linear-gradient(
+    145deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 16px 64px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Reorder elements to put search at top */
+.vector-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search container at top */
+.vector-input-container {
+  order: 1;
+  padding: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+
+.vector-input {
+  flex: 1;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 12px 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.vector-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+/* Messages/suggestions container */
+.vector-messages {
+  order: 2;
+  flex: 1;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* Suggestion items styling */
+.message {
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.message:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.message.system {
+  background: var(--system-message);
+  margin: 4px 0;
+}
+
+.message.user {
+  background: var(--user-message);
+  margin: 4px 0;
+}
+
+/* Subtle separator between suggestions */
+.message:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+  border-bottom-color: rgba(148, 190, 255, 0.1);
+}
+
+/* Message content styling */
+.message-content {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Improved visibility when modal is shown */
+.vector-modal.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Overlay styling */
+.vector-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--background);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.vector-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .vector-modal {
+    width: 100%;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .vector-input-container {
+    padding: 12px;
+  }
+
+  .vector-messages {
+    padding: 8px;
+  }
+}
+
 @media (max-width: 480px) {
   .chat-box {
     width: 100%;
@@ -233,5 +650,348 @@
   .close-button {
     top: 12px;
     right: 12px;
+  }
+}
+/* Previous styles remain the same up to vector-modal */
+
+/* Adjust layout proportions */
+.vector-modal {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search container at top */
+.vector-input-container {
+  order: 1;
+  padding: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  min-height: 76px; /* Fixed height for search container */
+}
+
+/* Messages container with fixed height */
+.vector-messages {
+  order: 2;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  margin-bottom: 0;
+}
+
+/* Bottom input container */
+.vector-bottom-container {
+  order: 3;
+  padding: 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  min-height: 76px;
+  align-items: center;
+}
+
+/* Send button styling */
+.vector-send-button {
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vector-send-button:hover {
+  transform: scale(1.05);
+  background: var(--primary-hover, #0096ff);
+}
+
+.vector-send-button:active {
+  transform: scale(0.95);
+}
+
+/* Loading message styling */
+.message.loading {
+  background: var(--system-message);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: loadingDots 1.4s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loadingDots {
+  0%,
+  100% {
+    transform: scale(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Message content loading state */
+.message-content.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+/* Search container styling */
+.vector-input-container {
+  order: 1;
+  padding: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  min-height: 76px;
+  align-items: center;
+}
+
+/* Input styling */
+.vector-input {
+  flex: 1;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 12px 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+/* Search button next to search box */
+.vector-search-button {
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vector-search-button:hover {
+  transform: scale(1.05);
+  background: var(--primary-hover, #0096ff);
+}
+
+.vector-search-button:active {
+  transform: scale(0.95);
+}
+
+/* Remove bottom container since we don't need it anymore */
+.vector-bottom-container {
+  display: none;
+}
+
+/* Modal container */
+.vector-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90%;
+  max-width: 640px;
+  height: 85vh;
+  max-height: 750px;
+  background: linear-gradient(
+    145deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 16px 64px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
+}
+
+/* Search container - fixed height */
+.vector-input-container {
+  padding: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  min-height: 60px;
+  align-items: center;
+  flex-shrink: 0; /* Prevent it from shrinking */
+  min-height: 60px;
+}
+
+/* Messages container - takes all available space */
+.vector-messages {
+  flex: 1; /* Make it grow to fill the remaining space */
+  overflow-y: auto; /* Allow scrolling if content exceeds available space */
+  padding: 12px; /* Add some padding for spacing */
+  display: flex; /* Enable flexible layout */
+  flex-direction: column; /* Stack messages vertically */
+  gap: 4px; /* Add spacing between messages */
+  min-height: 0; /* Ensure proper flex behavior with scrollable content */
+}
+
+/* Message styling */
+.message {
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.message:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.message.system {
+  background: var(--system-message);
+}
+
+.message.user {
+  background: var(--user-message);
+}
+
+/* Input and button styling */
+.vector-input {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 12px 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.vector-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.vector-search-button {
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vector-search-button:hover {
+  transform: scale(1.05);
+  background: var(--primary-hover, #0096ff);
+}
+
+.vector-search-button:active {
+  transform: scale(0.95);
+}
+
+/* Loading message styling */
+.message.loading {
+  background: var(--system-message);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: loadingDots 1.4s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loadingDots {
+  0%,
+  100% {
+    transform: scale(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .vector-modal {
+    width: 100%;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .vector-input-container {
+    padding: 12px;
+  }
+
+  .vector-messages {
+    padding: 8px;
   }
 }

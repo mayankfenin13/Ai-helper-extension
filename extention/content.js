@@ -1,7 +1,9 @@
 // Listener to handle messages from injected.js
 import { ChatBox } from "./ui/ChatBox";
+import { VectorSearchBox } from "./ui/vectorsearchbox";
 
 const chatBox = new ChatBox();
+const vectorSearchBox = new VectorSearchBox();
 
 window.addEventListener("message", (event) => {
   if (
@@ -61,135 +63,117 @@ const addChatButtonAsListItem = () => {
   const currentUrl = window.location.href;
   const urlPattern = /^https:\/\/maang\.in\/problems\/[\w-]+(\?.*)?$/;
 
-  // Remove existing button to prevent duplicates
-  const existingButton = document.querySelector(".chat-ai-button-li");
-  if (existingButton) existingButton.remove();
+  // Remove existing buttons to prevent duplicates
+  const existingChatButton = document.querySelector(".chat-ai-button-li");
+  const existingVectorButton = document.querySelector(
+    ".vector-search-button-li"
+  );
+  if (existingChatButton) existingChatButton.remove();
+  if (existingVectorButton) existingVectorButton.remove();
 
   if (!urlPattern.test(currentUrl)) {
-    console.log("Not on a problems page, button not added.");
+    console.log("Not on a problems page, buttons not added.");
     return; // Exit if the URL does not match
   }
 
   // Select the header container's <ul> element
   const ulElement = document.querySelector(".coding_nav_bg__HRkIn ul");
   if (!ulElement) {
-    console.warn("Header <ul> element not found. Button not added.");
+    console.warn("Header <ul> element not found. Buttons not added.");
     return;
   }
 
-  // Create the <li> element
-  const liElement = document.createElement("li");
-  liElement.className =
-    "d-flex flex-row rounded-3 dmsans align-items-center chat-ai-button-li";
-  liElement.style.padding = "0.36rem 1rem";
+  // Reusable function to create buttons
+  const createButton = (text, shortcut, clickHandler, customClass) => {
+    const liElement = document.createElement("li");
+    liElement.className = `d-flex flex-row rounded-3 dmsans align-items-center ${customClass}`;
+    liElement.style.padding = "0.36rem 1rem";
 
-  // Create the button container for the glowing effect
-  const buttonContainer = document.createElement("div");
-  buttonContainer.style.position = "relative";
-  buttonContainer.style.isolation = "isolate"; // Ensures glow doesn't affect other elements
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.position = "relative";
+    buttonContainer.style.isolation = "isolate";
 
-  // Create the button
-  const button = document.createElement("button");
-  button.textContent = "Ask AI";
+    const button = document.createElement("button");
+    button.textContent = text;
 
-  // Add modern AI-themed styles
-  button.style.cssText = `
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1.2rem;
-    background: linear-gradient(135deg, rgba(37, 38, 89, 0.9), rgba(63, 76, 119, 0.9));
-    color: #fff;
-    font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    letter-spacing: 0.3px;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    white-space: nowrap;
-  `;
-
-  // Add the shortcut text
-  const shortcutSpan = document.createElement("span");
-  shortcutSpan.textContent = "(⌘K/ctrl+K)";
-  shortcutSpan.style.marginLeft = "8px";
-  shortcutSpan.style.fontSize = "0.8em";
-  shortcutSpan.style.opacity = "0.8";
-
-  // Add hover effects
-  button.addEventListener("mouseover", () => {
-    button.style.transform = "translateY(-1px)";
-    button.style.background =
-      "linear-gradient(135deg, rgba(47, 48, 99, 0.95), rgba(73, 86, 129, 0.95))";
-    button.style.boxShadow = `
-      0 4px 12px -1px rgba(0, 0, 0, 0.15),
-      0 2px 6px -1px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 0 15px rgba(105, 17, 203, 0.3)
+    button.style.cssText = `
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1.2rem;
+      background: linear-gradient(135deg, rgba(37, 38, 89, 0.9), rgba(63, 76, 119, 0.9));
+      color: #fff;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
     `;
-  });
 
-  button.addEventListener("mouseout", () => {
-    button.style.transform = "translateY(0)";
-    button.style.background =
-      "linear-gradient(135deg, rgba(37, 38, 89, 0.9), rgba(63, 76, 119, 0.9))";
-    button.style.boxShadow = `
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1)
-    `;
-  });
+    const shortcutSpan = document.createElement("span");
+    shortcutSpan.textContent = shortcut;
+    shortcutSpan.style.marginLeft = "8px";
+    shortcutSpan.style.fontSize = "0.8em";
+    shortcutSpan.style.opacity = "0.8";
 
-  // Add active/click effect
-  button.addEventListener("mousedown", () => {
-    button.style.transform = "translateY(1px)";
-    button.style.boxShadow = `
-      0 2px 4px -1px rgba(0, 0, 0, 0.1),
-      0 1px 2px -1px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1)
-    `;
-  });
+    button.addEventListener("click", clickHandler);
 
-  button.addEventListener("mouseup", () => {
-    button.style.transform = "translateY(-1px)";
-  });
+    button.appendChild(shortcutSpan);
+    buttonContainer.appendChild(button);
+    liElement.appendChild(buttonContainer);
 
-  // Add event listener to open chatbox
-  button.addEventListener("click", () => {
-    console.log("AI Button clicked, opening chatbox");
-    chatBox.show();
-  });
+    return liElement;
+  };
 
-  // Assemble all elements
+  // Chat AI button
+  const chatButton = createButton(
+    "Ask AI",
+    "(⌘K/ctrl+K)",
+    () => {
+      console.log("AI Button clicked, opening chatbox");
+      chatBox.show();
+    },
+    "chat-ai-button-li"
+  );
 
-  button.appendChild(shortcutSpan);
-  buttonContainer.appendChild(button);
-  liElement.appendChild(buttonContainer);
-  ulElement.appendChild(liElement);
+  // Vector Search button
+  const vectorButton = createButton(
+    "Vector Search",
+    "(⌘D/ctrl+D)",
+    () => {
+      console.log("Vector Search Button clicked");
+      vectorSearchBox.show(); // Show the modal for Vector Search
+    },
+    "vector-search-button-li"
+  );
+
+  // Add buttons to the navigation
+  ulElement.appendChild(chatButton);
+  ulElement.appendChild(vectorButton);
 };
 
 // Set up URL change monitoring using both History API and MutationObserver
 const setupUrlChangeMonitoring = () => {
-  // Track the last URL to prevent duplicate processing
   let lastUrl = window.location.href;
 
-  // Create MutationObserver to watch for DOM changes
   const observer = new MutationObserver((mutations) => {
     const currentUrl = window.location.href;
     if (currentUrl !== lastUrl) {
       lastUrl = currentUrl;
       addChatButtonAsListItem();
+      vectorSearchBox.reset(); // Reset and autofetch for the new problem
     }
 
-    // Also check if the navigation container has been added/modified
     mutations.forEach((mutation) => {
       if (
         mutation.target.classList?.contains("coding_nav_bg__HRkIn") ||
@@ -200,7 +184,6 @@ const setupUrlChangeMonitoring = () => {
     });
   });
 
-  // Start observing with a more specific configuration
   observer.observe(document.body, {
     childList: true,
     subtree: true,
@@ -208,25 +191,29 @@ const setupUrlChangeMonitoring = () => {
     attributeFilter: ["class"],
   });
 
-  // Listen for back/forward navigation
-  window.addEventListener("popstate", addChatButtonAsListItem);
+  window.addEventListener("popstate", () => {
+    addChatButtonAsListItem();
+    vectorSearchBox.reset(); // Reset and autofetch on back/forward navigation
+  });
 
-  // Intercept pushState
   const originalPushState = history.pushState;
   history.pushState = function () {
     originalPushState.apply(this, arguments);
     addChatButtonAsListItem();
+    vectorSearchBox.reset(); // Reset and autofetch on pushState
   };
 
-  // Intercept replaceState
   const originalReplaceState = history.replaceState;
   history.replaceState = function () {
     originalReplaceState.apply(this, arguments);
     addChatButtonAsListItem();
+    vectorSearchBox.reset(); // Reset and autofetch on replaceState
   };
 
-  // Listen for URL changes via hash changes
-  window.addEventListener("hashchange", addChatButtonAsListItem);
+  window.addEventListener("hashchange", () => {
+    addChatButtonAsListItem();
+    vectorSearchBox.reset(); // Reset and autofetch on hash change
+  });
 };
 
 // Initial setup with retry mechanism

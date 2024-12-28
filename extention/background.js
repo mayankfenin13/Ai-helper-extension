@@ -49,6 +49,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Helper function to extract problem details
 function extractDSAProblemDetails(data) {
   return {
+    id: data.data?.id,
     title: data.data?.title || "No Problem Title",
     description: data.data?.body || "No Problem Description",
     constraints: data.data?.constraints || "No Constraints",
