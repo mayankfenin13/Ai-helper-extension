@@ -11,7 +11,7 @@ window.addEventListener("message", (event) => {
     !event.data ||
     event.data.type !== "apiIntercepted"
   ) {
-    return; // Ignore messages not from the injected script
+    return;
   }
 
   chrome.runtime.sendMessage(
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "getUserCode") {
     const { id } = message;
 
-    // Regex to find the relevant key
+    // Regex to find the key
     const regex = new RegExp(`course_\\d+_${id}_\\w+`);
     let userCode = null;
 
@@ -44,10 +44,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     }
 
-    // Respond with the user code or null if not found
     sendResponse({ userCode });
   }
-  return true; // Keep the message channel open for async response
+  return true;
 });
 
 // Injecting the script into the webpage
@@ -73,7 +72,7 @@ const addChatButtonAsListItem = () => {
 
   if (!urlPattern.test(currentUrl)) {
     console.log("Not on a problems page, buttons not added.");
-    return; // Exit if the URL does not match
+    return;
   }
 
   // Select the header container's <ul> element
@@ -162,7 +161,6 @@ const addChatButtonAsListItem = () => {
   ulElement.appendChild(vectorButton);
 };
 
-// Set up URL change monitoring using both History API and MutationObserver
 const setupUrlChangeMonitoring = () => {
   let lastUrl = window.location.href;
 
@@ -193,21 +191,21 @@ const setupUrlChangeMonitoring = () => {
 
   window.addEventListener("popstate", () => {
     addChatButtonAsListItem();
-    vectorSearchBox.reset(); // Reset and autofetch on back/forward navigation
+    vectorSearchBox.reset();
   });
 
   const originalPushState = history.pushState;
   history.pushState = function () {
     originalPushState.apply(this, arguments);
     addChatButtonAsListItem();
-    vectorSearchBox.reset(); // Reset and autofetch on pushState
+    vectorSearchBox.reset();
   };
 
   const originalReplaceState = history.replaceState;
   history.replaceState = function () {
     originalReplaceState.apply(this, arguments);
     addChatButtonAsListItem();
-    vectorSearchBox.reset(); // Reset and autofetch on replaceState
+    vectorSearchBox.reset();
   };
 
   window.addEventListener("hashchange", () => {
@@ -216,12 +214,11 @@ const setupUrlChangeMonitoring = () => {
   });
 };
 
-// Initial setup with retry mechanism
+// retry
 const initializeWithRetry = () => {
   addChatButtonAsListItem();
   setupUrlChangeMonitoring();
 
-  // Add a brief delay and retry once to catch late-loading elements
   setTimeout(addChatButtonAsListItem, 1000);
 };
 

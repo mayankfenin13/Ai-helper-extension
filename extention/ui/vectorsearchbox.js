@@ -119,7 +119,7 @@ export class VectorSearchBox {
 
     const title = document.createElement("div");
     title.className = "vector-title";
-    title.textContent = "Vector Search";
+    title.textContent = "Vector Search (Similar questions in AZ Problemset)";
 
     const closeButton = document.createElement("button");
     closeButton.className = "close-button";
@@ -139,7 +139,8 @@ export class VectorSearchBox {
 
     this.searchInput = document.createElement("input");
     this.searchInput.className = "vector-input";
-    this.searchInput.placeholder = "Enter your query...";
+    this.searchInput.placeholder =
+      "Enter keyworks to find related questions...";
 
     const sendButton = document.createElement("button");
     sendButton.className = "vector-send-button";

@@ -13,7 +13,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     const id = parsedResponse.data?.id;
 
-    // Request the content script to fetch user code
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length === 0) return;
 
@@ -42,7 +41,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       );
     });
 
-    return true; // Keep the message channel open for async response
+    return true;
   }
 });
 
