@@ -1,5 +1,9 @@
 # AI helper extention
 
+## DEMO VIDEO LINK
+
+[text](https://youtu.be/D5OpcMHzU-w)
+
 ## Description
 
 The **AI Helper Extension** is a tool designed to assist with DSA problem-solving. Leveraging advanced AI capabilities, it provides:
