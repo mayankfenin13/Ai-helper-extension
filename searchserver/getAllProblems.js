@@ -68,12 +68,12 @@ async function main() {
 
   console.log("Total problems fetched:", problems.length);
 
-  // Step 2: Fetch detailed information for all problems in parallel
+  //Fetch detailed information for all problems in parallel
   const detailedProblems = await fetchProblemDetailsParallel(problems);
 
   console.log("Fetched details for all problems.");
 
-  // Step 3: Save detailed problems to a file
+  // Save detailed problems to a file
   await saveToFile(detailedProblems, "problems_details.json");
 }
 

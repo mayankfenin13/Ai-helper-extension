@@ -1,4 +1,3 @@
-// Listener to handle messages from injected.js
 import { ChatBox } from "./ui/ChatBox";
 import { VectorSearchBox } from "./ui/vectorsearchbox";
 
@@ -13,7 +12,7 @@ window.addEventListener("message", (event) => {
   ) {
     return;
   }
-
+  //intercepting the api calls
   chrome.runtime.sendMessage(
     {
       type: "apiIntercepted",
@@ -26,7 +25,7 @@ window.addEventListener("message", (event) => {
     }
   );
 });
-
+//code editor from localstorage
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "getUserCode") {
     const { id } = message;
@@ -69,11 +68,6 @@ const addChatButtonAsListItem = () => {
   );
   if (existingChatButton) existingChatButton.remove();
   if (existingVectorButton) existingVectorButton.remove();
-
-  if (!urlPattern.test(currentUrl)) {
-    console.log("Not on a problems page, buttons not added.");
-    return;
-  }
 
   // Select the header container's <ul> element
   const ulElement = document.querySelector(".coding_nav_bg__HRkIn ul");
