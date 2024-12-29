@@ -29,23 +29,34 @@ window.addEventListener("message", (event) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "getUserCode") {
     const { id } = message;
+    console.log("Message received from background script:", message);
 
     // Regex to find the key
     const regex = new RegExp(`course_\\d+_${id}_\\w+`);
     let userCode = null;
 
-    // Traverse localStorage to find matching key
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (regex.test(key)) {
-        userCode = localStorage.getItem(key);
-        break; // Stop after finding the first match
+    try {
+      // Traverse localStorage to find the matching key
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (regex.test(key)) {
+          userCode = localStorage.getItem(key);
+          break; // Stop after finding the first match
+        }
       }
+
+      // Send the user code as the response
+      sendResponse({ userCode });
+    } catch (error) {
+      console.error("Error while retrieving user code:", error);
+      sendResponse({ error: error.message });
     }
 
-    sendResponse({ userCode });
+    // Return true to indicate async response
+    return true;
   }
-  return true;
+
+  return true; // Always return true for async responses
 });
 
 // Injecting the script into the webpage

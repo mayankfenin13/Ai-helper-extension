@@ -14,34 +14,140 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const id = parsedResponse.data?.id;
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs.length === 0) return;
+      if (tabs.length === 0) {
+        sendResponse({ status: "error", error: "No active tab found" });
+        return;
+      }
 
       chrome.tabs.sendMessage(
         tabs[0].id,
         { type: "getUserCode", id },
         (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(
+              "Error in getUserCode message:",
+              chrome.runtime.lastError.message
+            );
+            sendResponse({
+              status: "error",
+              error: chrome.runtime.lastError.message,
+            });
+            return;
+          }
+
           const userCode = response?.userCode || null;
 
-          // Extract problem details, including user code
           const extractedDetails = {
             problemTitle: parsedResponse.data?.title,
             context: {
               ...extractDSAProblemDetails(parsedResponse),
-              code_written_by_use: userCode,
+              id: parsedResponse.data?.id, // Include problem ID
+              code_written_by_user: userCode,
             },
           };
 
-          // Store in Chrome storage
-          chrome.storage.local.set({
-            interceptedContext: extractedDetails,
-          });
-
-          sendResponse({ status: "contextStored", message: extractedDetails });
+          chrome.storage.local.set(
+            { interceptedContext: extractedDetails },
+            () => {
+              sendResponse({
+                status: "contextStored",
+                message: extractedDetails,
+              });
+            }
+          );
         }
       );
     });
 
-    return true;
+    return true; // Keeps the port open for async response
+  }
+
+  if (message.type === "get_user_code") {
+    console.log("Message received from content script:", message);
+
+    let parsedResponse;
+    try {
+      parsedResponse = JSON.parse(message.response);
+    } catch (error) {
+      console.error("Failed to parse JSON response:", error);
+      sendResponse({ status: "error", error: "Invalid JSON format" });
+      return;
+    }
+
+    const id = parsedResponse.data?.id;
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length === 0) {
+        sendResponse({ status: "error", error: "No active tab found" });
+        return;
+      }
+
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { type: "getUserCode", id },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(
+              "Error in getUserCode message:",
+              chrome.runtime.lastError.message
+            );
+            sendResponse({
+              status: "error",
+              error: chrome.runtime.lastError.message,
+            });
+            return;
+          }
+
+          const userCode = response?.userCode || null;
+
+          console.log("User code received from content script:", userCode);
+          chrome.storage.local.get("interceptedContext", (data) => {
+            if (chrome.runtime.lastError) {
+              console.error(
+                "Error accessing interceptedContext:",
+                chrome.runtime.lastError.message
+              );
+              sendResponse({
+                status: "error",
+                error: chrome.runtime.lastError.message,
+              });
+              return;
+            }
+
+            const interceptedContext = data.interceptedContext || {};
+            const code_before = interceptedContext.context.code_written_by_user;
+
+            if (interceptedContext.context) {
+              interceptedContext.context.code_written_by_user =
+                userCode || code_before;
+            } else {
+              console.warn(
+                "No context found in interceptedContext; creating new context."
+              );
+              interceptedContext.context = { code_written_by_user: userCode };
+            }
+
+            chrome.storage.local.set({ interceptedContext }, () => {
+              if (chrome.runtime.lastError) {
+                console.error(
+                  "Error setting interceptedContext:",
+                  chrome.runtime.lastError.message
+                );
+                sendResponse({
+                  status: "error",
+                  error: chrome.runtime.lastError.message,
+                });
+                return;
+              }
+
+              sendResponse({ status: "contextStored", message: userCode });
+            });
+          });
+        }
+      );
+    });
+
+    return true; // Keeps the port open for async response
   }
 });
 

@@ -241,68 +241,109 @@ export class ChatBox {
       return;
     }
 
-    chrome.storage.local.get("interceptedContext", (data) => {
-      if (!data || !data.interceptedContext) {
+    // Fetch intercepted context from background
+    chrome.storage.local
+      .get("interceptedContext")
+      .then((data) => {
+        if (!data || !data.interceptedContext) {
+          throw new Error(
+            "Missing problem context. Please reload and try again."
+          );
+        }
+
+        const { interceptedContext } = data;
+        const { problemTitle, context } = interceptedContext;
+        const problemId = context.id;
+
+        // Send a message to the background script to get user code
+        return new Promise((resolve, reject) => {
+          chrome.runtime.sendMessage(
+            {
+              type: "get_user_code",
+              response: JSON.stringify({ data: { id: problemId } }),
+            },
+            (response) => {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else if (response?.status === "error") {
+                reject(new Error(response.error));
+              } else {
+                resolve({
+                  interceptedContext,
+                  userCode: response?.message || null,
+                });
+              }
+            }
+          );
+        });
+      })
+      .then(({ interceptedContext, userCode }) => {
+        const requestBody = {
+          query: content,
+          context: {
+            ...interceptedContext.context,
+            code_written_by_user:
+              userCode || interceptedContext.context.code_written_by_user,
+          },
+          db_data: {
+            user_name: userName,
+            problem_title: interceptedContext.problemTitle,
+          },
+        };
+
+        this.queryAI(requestBody);
+      })
+      .catch((error) => {
+        console.error("Error in sendMessage:", error);
         this.setLoading(false);
         this.messages.push({
           id: Date.now(),
           type: "system",
           content:
-            "Error: Missing problem context. Please reload and try again.",
+            error.message || "Something went wrong. Please try again later.",
           timestamp: new Date(),
         });
         this.renderMessages();
-        return;
-      }
+      });
+  }
 
-      const { problemTitle, context } = data.interceptedContext;
-
-      const requestBody = {
-        query: content,
-        context,
-        db_data: {
-          user_name: userName,
-          problem_title: problemTitle,
-        },
-      };
-
-      fetch("https://ai-helper-extention.vercel.app/query", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+  queryAI(requestBody) {
+    fetch("https://ai-helper-extention.vercel.app/query", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        this.setLoading(false);
+        if (!response.ok) throw new Error("Server error");
+        return response.json();
       })
-        .then((response) => {
-          this.setLoading(false);
-          if (!response.ok) throw new Error("Server error");
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status === "success") {
-            const aiMessage = {
-              id: Date.now(),
-              type: "system",
-              content: data.response,
-              timestamp: new Date(),
-            };
-            this.messages.push(aiMessage);
-            this.renderMessages();
-          } else {
-            throw new Error(data.error || "Unknown error occurred");
-          }
-        })
-        .catch((error) => {
-          this.setLoading(false);
-          this.messages.push({
+      .then((data) => {
+        if (data.status === "success") {
+          const aiMessage = {
             id: Date.now(),
             type: "system",
-            content: "Something went wrong. Please try again later.",
+            content: data.response,
             timestamp: new Date(),
-          });
+          };
+          this.messages.push(aiMessage);
           this.renderMessages();
+        } else {
+          throw new Error(data.error || "Unknown error occurred");
+        }
+      })
+      .catch((error) => {
+        this.setLoading(false);
+        this.messages.push({
+          id: Date.now(),
+          type: "system",
+          content: "Something went wrong. Please try again later.",
+          timestamp: new Date(),
         });
-    });
+        this.renderMessages();
+      });
   }
 
   renderMessages() {
