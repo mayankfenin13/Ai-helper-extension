@@ -53,10 +53,10 @@ The **AI Helper Extension** is a Chrome extension designed to help your DSA prob
 
 1. **Clone or Download the Extension**:
 
-   ````bash
-   git clone https://github.com/Piyushjha03/ai-helper-extention.git```
+   ```bash
+   git clone https://github.com/Piyushjha03/ai-helper-extention.git
 
-   ````
+   ```
 
 2. **Enable Developer Mode in Chrome:**
    Open Chrome and go to chrome://extensions/.
