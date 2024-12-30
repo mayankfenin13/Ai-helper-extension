@@ -1,61 +1,84 @@
-# AI helper extention
+# AI Helper Extension
 
-## DEMO VIDEO LINK
+## 🚀 Demo Video
 
-[Link](https://youtu.be/D5OpcMHzU-w)
+[Click to Watch](https://youtu.be/D5OpcMHzU-w)
 
-## Description
-
-The **AI Helper Extension** is a tool designed to assist with DSA problem-solving. Leveraging advanced AI capabilities, it provides:
-
-- **AI Assistance**: Real-time solutions and explanations for DSA problems.
-- **Vector Search**: Find related questions based on the current problem or a custom query.
+![Extension Screenshot](images/AiModal.png "Ai Modal")
+![Extension Screenshot](images/vectorSearch.png "vector Search Modal")
 
 ---
 
-## Features
+## 📄 Description
 
-- 💡 **AI Helper**: Get explanations, hints, and solutions tailored to your DSA problems.
-- 🔍 **Vector Search**: Search related problems using a query or the context of the current question.
+The **AI Helper Extension** is a Chrome extension designed to help your DSA problem-solving experience. By leveraging advanced AI models, it provides users with real-time assistance and intelligent search features for a seamless coding journey.
+
+### Key Highlights:
+
+- 💡 **AI Assistance**: Receive detailed solutions, hints, and explanations tailored to your DSA problems.
+- 🔍 **Vector Search**: Effortlessly find related problems based on the context of the current question or a custom query.
+- 📂 **Conversation History**: Never lose track of your interactions with AI.
 
 ---
 
-## Installation
+## ✨ Features
+
+### 1. **AI Helper**
+
+- Real-time explanations, hints, and solutions for DSA problems.
+- Uses **Gemini 2.0 Flash Exp**
+
+### 2. **Context**
+
+- The AI model has context to entire details of the problem.
+- The extention also keeps track of code written in the editor.
+
+### 3. **Vector Search**
+
+- Search for related problems using a query or the current question’s context.
+- Utilizes the **multilingual-e5-large** model for generating accurate embeddings.
+- Efficiently fetches results via **Pinecone** vector database.
+
+### 4. **Conversation History**
+
+- Stores all interactions for future reference using **MongoDB**.
+
+### 5. **Backend**
+
+- Backend services are hosted on **Vercel** for quick and reliable performance.
+
+---
+
+## 🛠️ Installation
 
 1. **Clone or Download the Extension**:
 
-   - Clone this repository or download the ZIP file and extract it to a local directory:
-     ```bash
-     git clone https://github.com/Piyushjha03/ai-helper-extention.git
-     ```
+   ````bash
+   git clone https://github.com/Piyushjha03/ai-helper-extention.git```
 
-2. **Enable Developer Mode in Chrome**:
+   ````
 
-   - Open Chrome and go to `chrome://extensions/`.
-   - Enable **Developer mode** using the toggle switch in the top-right corner.
+2. **Enable Developer Mode in Chrome:**
+   Open Chrome and go to chrome://extensions/.
+   Enable Developer mode using the toggle switch in the top-right corner.
 
-3. **Load the Extension**:
+3. **Load the Extension:**
 
-   - Click on **Load unpacked**.
-   - Select the directory called **extension**.
+   Click on Load unpacked.
+   Select the directory called extension.
+   Start Using the Extension:
 
-4. **Start Using the Extension**:
-   - The extension will now appear in your Chrome toolbar. Navigate to the website and start solving problems with AI assistance!
+The extension will now appear in your Chrome toolbar. Navigate to any DSA problem-solving website and start solving problems with AI assistance!
 
-## Usage
+---
 
-1. **Gemini for AI assistance**:
+## 🖥️ Tech Stack
 
-   - model used: gemini-2.0-flash-exp
+- **AI Model**: Gemini 2.0 Flash Exp
+- **Vector Embedding**: Multilingual-e5-large
+- **Vector Database**: Pinecone
+- **Conversation History**: MongoDB
+- **Hosting**: Vercel
+- **Frontend**: Chrome Extension(Javascript)
 
-2. **MongoDB to store Conversation History**:
-
-3. **Vector Embedding**:
-
-   - model used : multilingual-e5-large
-
-4. **Pinecone as Vector Database**:
-
-   - Use the **Vector Search** button to input a query or allow the extension to automatically suggest related problems.
-
-5. **Vercel to host Servers**
+---
