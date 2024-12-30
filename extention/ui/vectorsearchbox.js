@@ -84,11 +84,17 @@ export class VectorSearchBox {
         } else {
           this.results = data.results;
           data.results.forEach((result) => {
+            const title =
+              extractTitle(result.metadata).replace(" ", "-") || "Untitled";
             this.addMessage({
               type: "system",
               content: `Title: ${
                 extractTitle(result.metadata) || "Untitled"
               }<br>
+                Link: <a href="https://www.maang.in/problems/${title}-${
+                result.id
+              }" target="_blank">View Problem</a><br>
+                        <br>
                         Similarity Score: ${result.score.toFixed(2)}`,
               timestamp: new Date(),
             });
