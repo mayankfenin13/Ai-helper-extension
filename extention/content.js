@@ -35,16 +35,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const regex = new RegExp(`course_\\d+_${id}_\\w+`);
     let userCode = null;
 
+    const allPossibleCode = [];
     try {
       // Traverse localStorage to find the matching key
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (regex.test(key)) {
           userCode = localStorage.getItem(key);
-          break; // Stop after finding the first match
+          allPossibleCode.push({ key, userCode });
         }
       }
-
+      const editorLanguage = localStorage
+        .getItem("editor-language")
+        ?.replace(/['"]+/g, "")
+        .trim();
+      const matchingElement = allPossibleCode.find((item) => {
+        return item.key.includes(editorLanguage);
+      });
+      if (matchingElement) {
+        userCode = matchingElement.userCode;
+      } else {
+        console.log("No matching element found");
+      }
       // Send the user code as the response
       sendResponse({ userCode });
     } catch (error) {
