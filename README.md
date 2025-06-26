@@ -1,9 +1,5 @@
 # AI Helper Extension
 
-## 🚀 Demo Video
-
-[Click to Watch](https://youtu.be/D5OpcMHzU-w)
-
 ![Extension Screenshot](images/AiModal.png "Ai Modal")
 ![Extension Screenshot](images/vectorSearch.png "vector Search Modal")
 
@@ -51,18 +47,12 @@ The **AI Helper Extension** is a Chrome extension designed to help your DSA prob
 
 ## 🛠️ Installation
 
-1. **Clone or Download the Extension**:
 
-   ```bash
-   git clone https://github.com/Piyushjha03/ai-helper-extention.git
-
-   ```
-
-2. **Enable Developer Mode in Chrome:**
+1. **Enable Developer Mode in Chrome:**
    Open Chrome and go to chrome://extensions/.
    Enable Developer mode using the toggle switch in the top-right corner.
 
-3. **Load the Extension:**
+2. **Load the Extension:**
 
    Click on Load unpacked.
    Select the directory called extension.
